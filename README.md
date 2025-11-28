@@ -2,7 +2,7 @@
 
 Visual Navigation via Offline DINOv2 Feature Graph & Online Global Matching
 
-<img src="./dinov2.jpg" width="700"/>
+<img src="./dinov2.png" width="700"/>
 
 ##  Overview
 
