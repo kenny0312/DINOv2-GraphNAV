@@ -1,11 +1,11 @@
 # DINOv2-GraphNAV
 
 Visual Navigation via Offline DINOv2 Feature Graph & Online Global Matching
-
+![Demo](./gif_robot_prrception.gif)
 <img src="./dinov2.png" width="700"/>
 
 ##  Overview
-![Demo](./gif_robot_prrception.gif)
+
 **DINOv2-GraphNAV** is a visual-navigation framework that builds a **topological graph** from offline exploration trajectories using **DINOv2 global and local features**, then performs **real-time localization and navigation** with a lightweight online backbone.
 
 This project is designed for the *Embodied AI Visual Navigation Challenge* and integrates the following components:
