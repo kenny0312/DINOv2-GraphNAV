@@ -1,8 +1,15 @@
 # DINOv2-GraphNAV
 
 Visual Navigation via Offline DINOv2 Feature Graph & Online Global Matching
-![Demo](./gif_robot_prrception.gif)
-<img src="./dinov2.png" width="700"/>
+<p align="center">
+  <img src="./gif_robot_prrception.gif" width="420"/>
+</p>
+
+<p align="center">
+  <img src="./dinov2.png" width="720"/>
+</p>
+
+---
 
 ##  Overview
 
