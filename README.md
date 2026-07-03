@@ -1,74 +1,53 @@
-# DINOv2-GraphNAV
+<div align="center">
 
-Visual Navigation via Offline DINOv2 Feature Graph & Online Global Matching
-<p align="center">
-  <img src="./gif_robot_prrception.gif" width="420"/>
-</p>
+<img src="assets/hero.svg" alt="DINOv2-GraphNAV — navigate from a feature graph" width="100%" />
 
-<p align="center">
-  <img src="./dinov2.png" width="720"/>
-</p>
+<br/><br/>
 
----
+### Explore once, navigate forever. A robot builds a map out of what it *sees* —<br/>then finds its way to any target by matching views and walking the graph.
 
-##  Overview
+</div>
 
-**DINOv2-GraphNAV** is a visual-navigation framework that builds a **topological graph** from offline exploration trajectories using **DINOv2 global and local features**, then performs **real-time localization and navigation** with a lightweight online backbone.
+<br/>
 
-This project is designed for the *Embodied AI Visual Navigation Challenge* and integrates the following components:
+<div align="center">
+  <img src="./gif_robot_prrception.gif" width="460" alt="Robot perception during navigation" />
+</div>
 
-###  Offline Processing
-- **DINOv2-B/14 global feature extraction** for viewpoint-invariant embeddings  
-- **Local patch tokens + PCA reduction** to capture fine-grained spatial cues  
-- **K-NN graph construction** connecting visually similar frames  
-- **Weighted edges** reflecting both global and local similarity  
-- **Serialized assets** saved as:  
-  `*_global.npy`, `*_local.npy`, `*_pca.pkl`, `*_graph.pkl`, `*_paths.pkl`
+<br/>
 
-### Online Navigation
-- **Fast DINOv2-S/14 global feature extraction** (real-time)  
-- **FAISS nearest-neighbor search** to localize the agent  
-- **Graph-based shortest-path routing** using A*/Dijkstra  
-- **Multi-step Next-Best-View (NBV) guidance** for aligned navigation decisions  
+## The idea
 
-Together, these components form a robust graph-based navigation pipeline that is:  
-**model-agnostic**, **scalable**, and **capable of generalizing from offline exploration to online execution.**
+Give an agent a set of exploration frames and it builds a **topological map** where each node is a place it has seen and each edge links visually similar places. At run time it takes its current camera view, finds the closest node, and follows the shortest path to wherever you point it — no metric SLAM, no pre-built floor plan. Built for the *Embodied AI Visual Navigation Challenge*.
 
+<div align="center">
+  <img src="./dinov2.png" width="760" alt="System pipeline: offline graph building and online navigation" />
+</div>
 
-##  Project Structure
+<br/>
 
-```text
-DINOv2-GraphNAV/
-│── build_graph.py               # Offline feature extraction + graph building
-│── effonav_config.json          # Config for offline graph generation
-│── effonav_dino_global.npy      # Global feature bank (offline)
-│── effonav_dino_local.npy       # Local patch features (offline)
-│── effonav_dino_pca.pkl         # PCA transformer for local_dim reduction
-│── effonav_dino_graph.pkl       # Precomputed navigation graph
-│── effonav_dino_paths.pkl       # Image paths for offline nodes
-│── kenny_online.py              # Online navigation player
-│── dinov2.jpg                   # System pipeline diagram
-│── data/
-│     └── images_subsample/      # Offline exploration frames
-│── target.jpg                   # Example target
-│── startup.json                 # For vis_nav_game
-```
+## How it works
 
+**🗺️ Offline — build the map**
+- **DINOv2-B/14** global features give each frame a viewpoint-invariant fingerprint
+- Local patch tokens (PCA-reduced) add fine-grained spatial detail
+- A **k-NN graph** links visually similar frames, with edges weighted by global + local similarity
 
+**🧭 Online — find the way**
+- A lightweight **DINOv2-S/14** backbone fingerprints the live view in real time
+- **FAISS** nearest-neighbor search snaps the agent onto the closest node
+- **A\*/Dijkstra** routes to the target, with multi-step **next-best-view** guidance to keep heading and view aligned
 
-##  Key Features
+The result is a navigation pipeline that is model-agnostic, scalable, and generalizes from offline exploration to online execution.
 
-###  Offline Pipeline (Build-Time)
-- Extract **DINOv2-B/14 global features**
-- Extract **local patch tokens**
-- Apply **PCA** on local features for compactness
-- Build **image similarity graph** with k-NN
-- Store all outputs:  
-  `global.npy`, `local.npy`, `pca.pkl`, `graph.pkl`, `paths.pkl`
+<br/>
 
-###  Online Pipeline (Run-Time)
-- Use **DINOv2-S/14** for fast global feature extraction
-- Perform real-time localization via **FAISS nearest neighbor**
-- Retrieve nearest offline frame (node)
-- Navigate by following **shortest path** (A*/Dijkstra)
-- Display **multi-step Next-Best-Views (NBV)** for guidance
+## Under the hood
+
+The offline stage serializes its work as reusable artifacts — global/local feature banks, the PCA transform, the k-NN graph, and node-to-image paths — so navigation starts instantly without re-encoding the environment. Implementation lives in the `dinov2_effonav` module.
+
+<br/>
+
+<div align="center">
+<sub>A computer-vision project by <a href="https://kenny0312.github.io">Kenny Qiu</a> &nbsp;·&nbsp; see also <a href="https://github.com/kenny0312/videosense-agent">VideoSense Agent</a> and <a href="https://kenny0312.github.io/social-video-insights/">SocialLens</a></sub>
+</div>
